@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { saveForm } from "./mutateForm";
 
 export const generateForm = async (
   prevState: { message: string },
@@ -29,7 +30,7 @@ export const generateForm = async (
   }
 
   const data = parse.data;
-  const promptExplanation = `Based on the description, generate a survey with questions array where every element has 2 fields: label and the fieldType and fieldType can be of these options RadioGroup, Select, Input, Textarea, Switch; and return it in json format. For RadioGroup, and Select types also return fieldOptions array with label and value fields. For example, for RadioGroup, and Select types, the field options array can be [{label: 'Yes', value: 'Yes'}, {label: 'No', value: 'no'}] and for Input, Textarea, and Switch types, the field options array can be empty. For example, for Input, Textarea, and Switch types, the field options array can be []`;
+  const promptExplanation = `Based on the description, generate a survey object with 3 fields: name(string) for the form, description(string) of the form and a questions array where every element has 2 fields: label and the fieldType and fieldType can be of these options RadioGroup, Select, Input, Textarea, Switch; and return it in json format. For RadioGroup, and Select types also return fieldOptions array with label and value fields. For example, for RadioGroup, and Select types, the field options array can be [{label: 'Yes', value: 'Yes'}, {label: 'No', value: 'no'}] and for Input, Textarea, and Switch types, the field options array can be empty. For example, for Input, Textarea, and Switch types, the field options array can be []`;
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -49,11 +50,26 @@ export const generateForm = async (
 
     const json = await response.json();
 
+    console.log('##### generateForm -> response json', json);
+
+    const responseObj = JSON.parse(json.choices[0].message.content);
+
+    const dbFormId = await saveForm({
+      name: responseObj.name,
+      description: responseObj.description,
+      questions: responseObj.questions,
+    });
+
+    console.log('##### generateForm -> dbFormId', dbFormId);
+
+
     revalidatePath('/');
 
     return {
       message: 'success',
-      data: json,
+      data: {
+        formId: dbFormId,
+      },
     }
 
   } catch (error) {

@@ -105,7 +105,7 @@ export const questionRelations = relations(
   questions,
   ({ many, one }) => ({
     form: one(forms, {
-      fields: [questions.id],
+      fields: [questions.formId],
       references: [forms.id],
     }),
     fieldOptions: many(fieldOptions),
@@ -126,7 +126,7 @@ export const fieldOptionRelations = relations(
   fieldOptions,
   ({ one }) => ({
     question: one(questions, {
-      fields: [fieldOptions.id],
+      fields: [fieldOptions.questionId],
       references: [questions.id],
     }),
   }),
