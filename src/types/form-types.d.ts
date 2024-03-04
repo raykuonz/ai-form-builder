@@ -1,7 +1,15 @@
 import { InferSelectModel } from "drizzle-orm";
 
-import { forms, questions, fieldOptions } from "@/db/schema";
+import {
+  answers,
+  fieldOptions,
+  forms,
+  formSubmissions,
+  questions,
+} from "@/db/schema";
 
-export type FormSelectModel = InferSelectModel<typeof forms>;
-export type QuestionSelectModel = InferSelectModel<typeof questions>;
+export type AnswerSelectModal = InferSelectModel<typeof answers>;
 export type FieldOptionSelectModel = InferSelectModel<typeof fieldOptions>;
+export type FormSelectModel = InferSelectModel<typeof forms>;
+export type FormSubmissionSelectModal = InferSelectModel<typeof formSubmissions>;
+export type QuestionSelectModel = InferSelectModel<typeof questions>;
