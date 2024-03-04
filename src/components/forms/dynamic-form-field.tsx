@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 interface DynamicFormFieldProps {
   question: QuestionSelectModel & { fieldOptions: FieldOptionSelectModel[] };
   value: string;
-  onChange: (value?: string | React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value?: string | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
 const DynamicFormField = ({
@@ -27,8 +27,8 @@ const DynamicFormField = ({
 
   const components = {
     Input: () => <Input type="text" onChange={onChange} />,
-    Switch: () => <Switch  />,
-    Textarea: () => <Textarea />,
+    Switch: () => <Switch />,
+    Textarea: () => <Textarea onChange={onChange} />,
     Select: () => (
       <Select
         onValueChange={onChange}
@@ -44,7 +44,7 @@ const DynamicFormField = ({
           {question.fieldOptions.map((option) => (
             <SelectItem
               key={`${option.label} ${option.value}`}
-              value={`${option.id}`}
+              value={`answer_${option.id}`}
               className='cursor-pointer'
             >
               {option.label}
@@ -65,7 +65,7 @@ const DynamicFormField = ({
             <FormControl>
               <RadioGroupItem
                 id={`${option.id}`}
-                value={`${option.id}`}
+                value={`answer_${option.id}`}
               />
             </FormControl>
             <Label

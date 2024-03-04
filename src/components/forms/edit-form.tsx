@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 import {
   FieldOptionSelectModel,
@@ -9,6 +10,7 @@ import {
   QuestionSelectModel
 } from "@/types/form-types";
 import { publishForm } from "@/lib/queries/mutateForm";
+import { submitForm } from "@/lib/queries/mutateSubmission";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -30,6 +32,7 @@ const EditForm = ({
   editMode,
 }: EditFormProps) => {
 
+  const router = useRouter();
   const formHook = useForm();
 
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
@@ -42,6 +45,41 @@ const EditForm = ({
     if (editMode) {
       await publishForm(form.id);
       setSuccessDialogOpen(true);
+    } else {
+      let answers = [];
+
+      for (const [questionId, value] of Object.entries(data)) {
+        const id = parseInt(questionId.replace('question_', ''));
+
+        let fieldOptionId;
+        let textValue;
+
+        if (typeof value === 'string' && value.includes('answer_')) {
+          fieldOptionId = parseInt(value.replace('answer_', ''));
+        } else {
+          textValue = value as string;
+        }
+
+        answers.push({
+          questionId: id,
+          fieldOptionId,
+          value: textValue,
+        })
+      }
+
+      try {
+        const response = await submitForm({
+          formId: form.id,
+          answers,
+        });
+
+        if (response) {
+          router.push('/forms/success');
+        }
+      } catch (error) {
+        console.error('##### submit form error');
+      }
+
     }
   }
 

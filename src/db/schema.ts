@@ -88,6 +88,7 @@ export const formRelations = relations(
       fields: [forms.userId],
       references: [users.id],
     }),
+    formSubmissions: many(formSubmissions),
   }),
 );
 
@@ -109,6 +110,7 @@ export const questionRelations = relations(
       references: [forms.id],
     }),
     fieldOptions: many(fieldOptions),
+    answers: many(answers),
   }),
 );
 
@@ -129,5 +131,53 @@ export const fieldOptionRelations = relations(
       fields: [fieldOptions.questionId],
       references: [questions.id],
     }),
+  }),
+);
+
+export const answers = pgTable(
+  'answer',
+  {
+    id: serial('id').primaryKey(),
+    value: text('value'),
+    questionId: integer('questionId'),
+    formSubmissionId: integer('formSubmissionId'),
+    fieldOptionId: integer('fieldOptionId'),
+  }
+);
+
+export const answerRelations = relations(
+  answers,
+  ({ one }) => ({
+    question: one(questions, {
+      fields: [answers.questionId],
+      references: [questions.id],
+    }),
+    formSubmission: one(formSubmissions, {
+      fields: [answers.formSubmissionId],
+      references: [formSubmissions.id],
+    }),
+    fieldOption: one(fieldOptions, {
+      fields: [answers.fieldOptionId],
+      references: [fieldOptions.id],
+    }),
+  }),
+);
+
+export const formSubmissions = pgTable(
+  'formSubmission',
+  {
+    id: serial('id').primaryKey(),
+    formId: integer('formId'),
+  }
+);
+
+export const formSubmissionRelations = relations(
+  formSubmissions,
+  ({ one, many }) => ({
+    form: one(forms, {
+      fields: [formSubmissions.formId],
+      references: [forms.id],
+    }),
+    answers: many(answers),
   }),
 );
