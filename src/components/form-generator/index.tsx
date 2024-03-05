@@ -55,7 +55,7 @@ const FormGenerator = () => {
   useEffect(() => {
     if (state.message === 'success') {
       setIsOpen(false);
-      router.push(`/forms/edit/${state.data.formId}`);
+      router.push(`/view-forms/edit/${state.data.formId}`);
     }
 
   }, [state.message]);

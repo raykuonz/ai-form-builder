@@ -41,7 +41,7 @@ const FormsList = ({
           </CardHeader>
           <CardFooter>
             <Link
-              href={`/forms/edit/${form.id}`}
+              href={`/view-forms/edit/${form.id}`}
               className="w-full"
             >
               <Button

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { getForm } from "@/lib/queries/getForm";
 import { auth } from "@/lib/auth";
 import EditForm from "@/components/forms/edit-form";
@@ -53,6 +55,12 @@ const FormIdPage = async ({
 
   return (
     <>
+      <Link
+        href="/view-forms"
+        className="underline my-4"
+      >
+        Back to all forms
+      </Link>
       <EditForm
         form={form}
         editMode={true}
