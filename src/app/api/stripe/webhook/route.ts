@@ -13,7 +13,14 @@ const relevantEvents = new Set([
 export async function POST(req: Request) {
   const signature = req.headers.get('stripe-signature') as string;
 
-  if (!signature) return null;
+  if (!signature) {
+    return new Response(
+    JSON.stringify({ error: 'No signature' }),
+      {
+        status: 500,
+      }
+    );
+  };
 
   const body = await req.text();
 
