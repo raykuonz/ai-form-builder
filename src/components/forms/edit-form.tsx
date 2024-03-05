@@ -3,13 +3,15 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Trash2 } from "lucide-react";
 
 import {
   FieldOptionSelectModel,
   FormSelectModel,
   QuestionSelectModel
 } from "@/types/form-types";
-import { publishForm } from "@/lib/queries/mutateForm";
+import { deleteForm, publishForm } from "@/lib/queries/mutateForm";
 import { submitForm } from "@/lib/queries/mutateSubmission";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,6 +41,13 @@ const EditForm = ({
 
   const handleDialogOpenChange = (open: boolean) => {
     setSuccessDialogOpen(open);
+  }
+
+  const handleFormDelete = async () => {
+    await deleteForm(form.id);
+    toast('Form deleted.');
+    router.push('/view-forms');
+    router.refresh();
   }
 
   const handleFormSubmit = async (data: any) => {
@@ -96,39 +105,51 @@ const EditForm = ({
         {form.description}
       </p>
       <Form {...formHook}>
-          <form
-            onSubmit={formHook.handleSubmit(handleFormSubmit)}
-            className="grid w-full max-w-3xl items-center gap-6 my-4"
+        <form
+          onSubmit={formHook.handleSubmit(handleFormSubmit)}
+          className="grid w-full max-w-3xl items-center gap-6 my-4"
+        >
+          {form.questions.map((question, index) => (
+            <FormField
+              key={`${question.label}_${index}`}
+              name={`question_${question.id}`}
+              control={formHook.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className="text-base mt-3"
+                  >
+                    {index + 1}. {question.label}
+                  </FormLabel>
+                  <FormControl>
+                    <DynamicFormField
+                      question={question}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            ></FormField>
+          ))}
+          <Button
+            type="submit"
           >
-            {form.questions.map((question, index) => (
-              <FormField
-                key={`${question.label}_${index}`}
-                name={`question_${question.id}`}
-                control={formHook.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className="text-base mt-3"
-                    >
-                      {index + 1}. {question.label}
-                    </FormLabel>
-                    <FormControl>
-                      <DynamicFormField
-                        question={question}
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              ></FormField>
-            ))}
-            <Button
-              type="submit"
-            >
-              {editMode ? 'Publish' : 'Submit'}
-            </Button>
-          </form>
+            {editMode ? 'Publish form' : 'Submit'}
+          </Button>
+        </form>
+        {editMode && (
+          <Button
+            variant="destructive"
+            onClick={handleFormDelete}
+            className="w-full mb-4"
+          >
+            <Trash2
+              className="w-4 h-4 mr-2"
+            />
+            Delete form
+          </Button>
+        )}
       </Form>
       <FormPublishSuccessDialog
         formId={form.id}

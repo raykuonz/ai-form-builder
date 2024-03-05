@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Plus, Sparkles } from "lucide-react";
 
 import { generateForm } from "@/lib/queries/generateForm";
 import {
@@ -23,6 +24,9 @@ export const SubmitButton = () => {
       type="submit"
       disabled={pending}
     >
+      <Sparkles
+        className="h-4 w-4 mr-2"
+      />
       {pending ? 'Generating...' : 'Generate'}
     </Button>
   );
@@ -68,6 +72,9 @@ const FormGenerator = () => {
       <Button
         onClick={handleFormCreate}
       >
+        <Plus
+          className="h-4 w-4 mr-2"
+        />
         Create form
       </Button>
       <DialogContent
@@ -93,11 +100,6 @@ const FormGenerator = () => {
           </div>
           <DialogFooter>
             <SubmitButton />
-            <Button
-              variant="link"
-            >
-              Create manually
-            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

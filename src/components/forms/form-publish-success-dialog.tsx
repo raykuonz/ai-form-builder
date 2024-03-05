@@ -1,6 +1,7 @@
 "use client";
 
-import { Link2Icon } from "lucide-react";
+import { toast } from "sonner";
+import { Copy, Link2Icon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,8 +28,8 @@ const FormPublishSuccessDialog = ({
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(baseUrl + '/forms/' + formId)
-      .then(() => alert('Copied to clipboard.'))
-      .catch(() => alert('Faied to copy to clipboard.'))
+      .then(() => toast('Copied to clipboard.'))
+      .catch(() => toast('Faied to copy to clipboard.'))
   }
 
   return (
@@ -69,6 +70,9 @@ const FormPublishSuccessDialog = ({
             <Button
               onClick={copyToClipboard}
             >
+              <Copy
+                className="w-4 h-4 mr-2"
+              />
               Copy
             </Button>
           </div>

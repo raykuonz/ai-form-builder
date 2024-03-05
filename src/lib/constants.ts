@@ -15,16 +15,6 @@ export const DASHBOARD_NAVIGATION_CONFIG: {
       icon: "list",
     },
     {
-      title: "Analytics",
-      href: "/analytics",
-      icon: "lineChart",
-    },
-    {
-      title: "Charts",
-      href: "/charts",
-      icon: "pieChart",
-    },
-    {
       title: "Settings",
       href: "/settings",
       icon: "settings",

@@ -7,6 +7,10 @@ import {
   forms,
   questions as dbQuestions,
   fieldOptions as dbFieldOptions,
+  formSubmissions,
+  answers,
+  questions,
+  fieldOptions,
 } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
@@ -79,4 +83,40 @@ export const publishForm = async (formId: number) => {
     .update(forms)
     .set({ published: true })
     .where(eq(forms.id, formId));
+}
+
+export const deleteForm = async (formId: number) => {
+  try {
+
+    await db.transaction(async (tx) => {
+
+      // delete all form submissions
+      const deletedFormSubmissionIds = await tx.delete(formSubmissions)
+        .where(eq(formSubmissions.formId, formId))
+        .returning({ deletedFormSubmissionId: formSubmissions.id })
+
+      // delete all answers - submissionIds
+      for (const { deletedFormSubmissionId } of deletedFormSubmissionIds) {
+        await tx.delete(answers)
+          .where(eq(answers.formSubmissionId, deletedFormSubmissionId));
+      }
+
+      // delete all questions - formId
+      const deletedQuestionIds = await tx.delete(questions)
+        .where(eq(questions.formId, formId))
+        .returning({ deletedQuestionId: questions.id });
+
+      // delete all fieldOptions - questionIds
+      for (const { deletedQuestionId } of deletedQuestionIds) {
+        await tx.delete(fieldOptions)
+          .where(eq(fieldOptions.questionId, deletedQuestionId));
+      }
+
+      // Finally, delete the form
+      await tx.delete(forms)
+        .where(eq(forms.id, formId));
+    });
+  } catch (error) {
+    console.error('##### deleteForm error', error);
+  }
 }
