@@ -1,8 +1,8 @@
 import { SessionProvider } from "next-auth/react";
+import Image from "next/image";
 
 import Header from "@/components/header";
-import FormGenerator from "@/components/form-generator";
-import Image from "next/image";
+import FormGeneratorWrapper from "@/components/form-generator/form-generator-wrapper";
 
 export default async function Home() {
 
@@ -24,7 +24,7 @@ export default async function Home() {
           >
             Generate, publish and share your form right away with AI, Dive into insightful results, charts and analytics.
           </p>
-          <FormGenerator />
+          <FormGeneratorWrapper />
           <div
             className="w-full bg-gradient-to-b from-transparent to-white h-24"
           ></div>

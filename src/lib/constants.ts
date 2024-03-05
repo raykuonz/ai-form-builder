@@ -31,3 +31,5 @@ export const DASHBOARD_NAVIGATION_CONFIG: {
     },
   ]
 }
+
+export const MAX_FREE_FORMS = 3;

@@ -2,8 +2,9 @@ import { SessionProvider } from "next-auth/react";
 
 import { DASHBOARD_NAVIGATION_CONFIG } from "@/lib/constants";
 import DashboardNav from "@/components/navigation/dashboard-nav";
-import FormGenerator from "@/components/form-generator";
 import Header from "@/components/header";
+import UpgradeAccountButton from "@/components/navigation/upgrade-account-button";
+import FormGeneratorWrapper from "@/components/form-generator/form-generator-wrapper";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -27,6 +28,7 @@ const AdminLayout = ({
           <DashboardNav
             items={DASHBOARD_NAVIGATION_CONFIG.sidebarNav}
           />
+          <UpgradeAccountButton />
         </aside>
         <main
           className="flex w-full flex-1 flex-col overflow-hidden"
@@ -40,7 +42,7 @@ const AdminLayout = ({
               Dashboard
             </h1>
             <SessionProvider>
-              <FormGenerator />
+              <FormGeneratorWrapper />
             </SessionProvider>
           </header>
           <hr
