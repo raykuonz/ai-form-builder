@@ -26,7 +26,7 @@ import SubscribeButton from "../subscribe-button";
     }
 
     const formCount = response.data?.length;
-    const percent = Math.max((formCount / MAX_FREE_FORMS) * 100, 100);
+    const percent = Math.min((formCount / MAX_FREE_FORMS) * 100, 100);
 
     return (
       <div>

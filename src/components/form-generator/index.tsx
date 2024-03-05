@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-import { navigateToForm } from "@/lib/navigateToForm";
 import { generateForm } from "@/lib/queries/generateForm";
 import {
   Dialog,
@@ -39,7 +39,8 @@ const FormGenerator = () => {
 
   const [state, formAction] = useFormState(generateForm, initialState);
 
-const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const session = useSession();
 
@@ -54,7 +55,7 @@ const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     if (state.message === 'success') {
       setIsOpen(false);
-      navigateToForm(state.data.formId);
+      router.push(`/forms/edit/${state.data.formId}`);
     }
 
   }, [state.message]);
