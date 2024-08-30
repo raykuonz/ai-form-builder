@@ -17,7 +17,7 @@ export default async function Home() {
           <h1
             className="text-4xl font-bold text-center tracking-tighter sm:Text-5xl md:text-6xl leading-6"
           >
-            Create yourt forms <br />in seconds not hours
+            Create forms <br />in seconds not hours
           </h1>
           <p
             className="max-w-[600px] mt-4 text-center text-gray-500 md:text-xl"
